@@ -1,0 +1,52 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
+
+html, body, table {
+    margin: 0 0;
+    padding: 0 0;
+    font-family: 'Lato';
+    text-align:center;
+    display: block;
+}
+
+
+nav {
+    height: 100px;
+    width: 100%;
+    display: block;
+    position: fixed;
+    text-align:center;
+}
+
+ul {
+    text-decoration: none;
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li {
+    width:15%;
+    height:50px;
+    display: inline-block;
+}
+
+h1 {
+    font-size: 100px;
+    margin: inherit;
+}
+
+a:link{
+   color:gray;
+   text-decoration: underline;
+}
+a:visited{
+   color: gray;
+   text-decoration: underline;
+}
+a:hover{
+   color:  black;
+   text-decoration: underline;
+}
+a:active{
+   color: gray;
+   text-decoration: underline;
+}
