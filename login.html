@@ -1,20 +1,27 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Login Page!</title>
+<title>Login Page!</title><meta charset="utf-8">
 <link rel="stylesheet" href="style.css" type="text/css"/>
 </head>
 
 <body>
- <h1>Login:</h1>
- <form action="login.py" method="POST">
+ <h1>Login</h1>
+ <nav>
+ <ul>
+	    <li><h2><a href="login.html">Login</a></h2></li>
+            <li><h2><a href="create.html">Sign Up</a></h2></li>
+            <li><h2><a href="page1.py">Play</a></h2></li>
+            <li><h2><a href="page2.py">Statistics</a></h2></li>
+            <li><h2><a href="logout.py">Logout</a></h2></li>
+        </ul></nav><br>
+  <form action="login.py" method="POST">
    <p>User Name:</p>
    <input type="text" name="user">
    <p>Password:</p>
    <input type="password" name="pass"><br><br>
    <input type="submit" name="status" value="login">
  </form>
- <h3>If you don't have an account, <a href = "create.html">create one</a>.</h3>
- <h3>Or go back to the <a href="/Finalproject">homepage</a></h3>
+
 </body>
 </html>
