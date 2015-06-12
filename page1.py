@@ -9,6 +9,7 @@ cgitb.enable()
 #just acccess it from anywhere in the program.
 form = cgi.FieldStorage()
 
+#here is the edit
 def header():
         return """content-type: text/html
 
