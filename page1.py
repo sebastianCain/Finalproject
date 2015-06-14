@@ -20,7 +20,7 @@ def header():
     <link rel="stylesheet" href="style.css" type="text/css"/>
     </head>
     <body>
-        <h1> This is the FIRST page! </h1>
+        <h1> Play Blackjack! </h1>
     """
 
 
@@ -40,7 +40,8 @@ def authenticate():
         #compare with file
         text = open('loggedin.txt').read().split("\n")
         for line in text:
-            line = line.split(",")
+            userInfo = line.split(";")
+            line = userInfo[0].split(",")
             if line[0]==user:#when you find the right user name
                 if line[1]==magicnumber and line[2]==IP:
                     return True
@@ -59,7 +60,7 @@ def securefields():
     return ""
 #makes a link, link will include secure features if the user is logged in
 def makeLink(page, text, action):
-    return '<a href="'+page+securefields()+action+'">'+text+'</a><br>'
+    return '<a href="'+page+securefields()+action+'">'+text+'</a>'
 
 deck = {}
 def createDeck():
@@ -103,6 +104,19 @@ def sumOfCards(L):
         total += deck[i]
     return total	
 
+def dealCards(x,y):
+    x.append(random.choice(deck.keys()))
+    x.append(random.choice(deck.keys()))
+    y.append(random.choice(deck.keys()))
+    y.append(random.choice(deck.keys()))
+
+def cardsToImgs(L):
+    htmlStr = ""
+    for i in L:
+        words = i.split(" ")
+        htmlStr += '<img src="images/'+(words[0])[0]+(words[2])[0]+'.png" width="72px" height="96px" alt="'+i+'">'
+    return htmlStr
+
 def game():
     htmlStr = ""
     file=open("loggedin.txt",'r')
@@ -112,39 +126,59 @@ def game():
     alert = ""
     userCards = []
     cpuCards = []
+    gameOver = False
     for i in data:
-        x = i.split(",")
-        if x[0] == form["user"].value:
-            if len(x) > 3:
-                #actions
-                userCards = x[3::]
-                cpu = random.randrange(17,26)
+        x = i.split(";")
+        userInfo = x[0].split(",")
+        if userInfo[0] == form["user"].value:
+            if len(x) > 1 and "action" in form.keys():
+                userCards = x[1].split(",")
+                cpuCards = x[2].split(",")
                 if form['action'].value == "stand":
-                    if cpu > 21:
-                        alert += "YOU WIN!!"
-                    elif sumOfCards(userCards) > 21:
-                        alert += "YOU LOSE!!"
-                    elif sumOfCards(userCards) >= cpu:
-                        alert += "YOU WIN!!"
+                    if sumOfCards(cpuCards) > 21:
+                        alert = "The AI has " + str(sumOfCards(userCards)) + " more than 21, so you win!"
+                        gameOver = True
+                    elif sumOfCards(userCards) > sumOfCards(cpuCards):
+                        alert = "You are closer to 21 than the AI, so you win!"
+                        gameOver = True
                     else:
-                        alert += "YOU LOSE!!"
+                        alert = "The AI is closer to 21 than you, so you lose :("
+                        gameOver = True
                 elif form['action'].value == "hit":
                     userCards.append(random.choice(deck.keys()))
+                    if sumOfCards(userCards) > 21:
+                        alert = "You have " + str(sumOfCards(userCards)) + ", which is over 21, so you lose."
+                        gameOver = True
+                    elif sumOfCards(cpuCards) < 17:
+                        cpuCards.append(random.choice(deck.keys()))
+                    if sumOfCards(cpuCards) > 21:
+                        alert = "The AI has " + str(sumOfCards(userCards)) + ", more than 21, so you win!"
+                        gameOver = True
+                elif form['action'].value == "restart":
+                    userCards = []
+                    cpuCards = []
+                    alert = ""
+                    dealCards(userCards, cpuCards)
             else:
-                #deal
-                userCards.append(random.choice(deck.keys()))
-                userCards.append(random.choice(deck.keys()))
-            x = x[:3] + userCards
-            htmlStr += "Your cards:" + str(x[3::])
-            line = ",".join(x)
+                dealCards(userCards, cpuCards)
+
+            userString = ",".join(userCards)
+            cpuString = ",".join(cpuCards)
+            newLineArr = [x[0], userString, cpuString]
+            line = ";".join(newLineArr)
+            htmlStr += "CPU cards:<br>" + cardsToImgs(cpuCards) + "<br><h2>The CPU has " + str(sumOfCards(cpuCards)) + " in total</h2><br>"
+            htmlStr += "Your cards:<br>" + cardsToImgs(userCards) + "<br><h2>You have " + str(sumOfCards(userCards)) + " in total</h2><br>"
             newData += line + "\n"
         else:
             newData += i + "\n"
     newfile = open("loggedin.txt", "w")
     newfile.write(newData)
     newfile.close()
-    htmlStr += "<br><br>" + alert
-    htmlStr += "<br><br>" + makeLink("page1.py","Hit","&action=hit") + "<br>" + makeLink("page1.py","Stand", "&action=stand")
+    if gameOver:
+        htmlStr += "<br><br>" + makeLink("page1.py","Restart", "&action=restart")
+    else:
+        htmlStr += "<br><br>" + makeLink("page1.py","Hit","&action=hit") + "<br>" + makeLink("page1.py","Stand", "&action=stand")
+    htmlStr += "<br><br><h2>" + alert + "</h2><br><br>"
     return htmlStr
             
 def loggedIn():
@@ -157,7 +191,14 @@ def notLoggedIn():
 def main():
     body = ""
     #use this to add stuff to the page that anyone can see.
-    body += ""
+    body += '<nav> <ul>'
+    body += "<li><h2>"+makeLink("login.html","Login","")+"</h2></li>"
+    body += "<li><h2>"+makeLink("create.html","Sign Up","")+"</h2></li>"
+    body += "<li><h2>"+makeLink("page1.py","Play","")+"</h2></li>"
+    body += "<li><h2>"+makeLink("page2.py","Leaders","")+"</h2></li>"
+    body += "<li><h2>"+makeLink("logout.py","Logout","")+"</h2></li>"
+
+    body += '</ul></nav><br><br><br><br><br>\n'
 
     #determine if the user is properly logged in once. 
     isLoggedIn = authenticate()
@@ -169,15 +210,15 @@ def main():
         body += notLoggedIn()
 
     #anyone can see this
-    body += ""
+    #body += ""
     
     #attach a logout link only if logged in
-    if isLoggedIn:
-        body+= makeLink("logout.py","Click here to log out","")+"<br>"
+    #if isLoggedIn:
+        #body+= makeLink("logout.py","Click here to log out","")+"<br>"
 
     #make links that include logged in status when the user is logged in
-    body += makeLink("page1.py","here is page one","")+'<br>'
-    body += makeLink("page2.py","here is page two","")+'<br>'
+    #body += makeLink("page1.py","here is page one","")+'<br>'
+    #body += makeLink("page2.py","here is page two","")+'<br>'
 
     #finally print the entire page.
     print header() + body + footer()

@@ -87,12 +87,12 @@ def login(form):
     user = form['user'].value
     password = form['pass'].value
     if authenticate(user,password):
-        result += "Success!<br>\n"+"<a href='create.html'>Return</a>"
+        result += "Success!"
         #add user to logged in status
         magicNumber = logInUser(user)
-        result += '<a href="page1.py?user='+user+'&magicnumber='+str(magicNumber)+'">Click here to go to the main site!</a>'
+        result += '<br><a href="page1.py?user='+user+'&magicnumber='+str(magicNumber)+'">Click here to play!</a>'
     else:
-        result += "Failed to log in, authentication failure"+"<a href='/Finalproject/create.html'>Return</a>"
+        result += "Failed to log in, authentication failure"+"<a href='/Finalproject/login.html'>Return</a>"
     return result
 
 

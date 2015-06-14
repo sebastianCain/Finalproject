@@ -1,4 +1,4 @@
-#!/usr/bin/python 
+#!/usr/bin/python
 import random
 import cgi,cgitb,os
 cgitb.enable()
@@ -8,6 +8,7 @@ cgitb.enable()
 #just acccess it from anywhere in the program.
 form = cgi.FieldStorage()
 
+#here is the edit
 def header():
         return """content-type: text/html
 
@@ -18,9 +19,8 @@ def header():
     <link rel="stylesheet" href="style.css" type="text/css"/>
     </head>
     <body>
-        <h1> This is the SECOND page! </h1>
+        <h1> Leaderboard </h1>
     """
-
 
 def footer():
     return """</body>
@@ -58,7 +58,7 @@ def securefields():
 
 #makes a link, link will include secure features if the user is logged in
 def makeLink(page, text):
-    return '<a href="'+page+securefields()+'">'+text+'</a><br>'
+    return '<a href="'+page+securefields()+'">'+text+'</a>'
 
 def loggedIn():
     return '''
@@ -73,7 +73,14 @@ def notLoggedIn():
 def main():
     body = ""
     #use this to add stuff to the page that anyone can see.
-    body += "<hr>other stuff can go here<hr>\n"
+    body += '<nav><ul>'
+    body += "<li><h2>"+makeLink("login.html","Login")+"</h2></li>"
+    body += "<li><h2>"+makeLink("create.html","Sign Up")+"</h2></li>"
+    body += "<li><h2>"+makeLink("page1.py","Play")+"</h2></li>"
+    body += "<li><h2>"+makeLink("page2.py","Leaders")+"</h2></li>"
+    body += "<li><h2>"+makeLink("logout.py","Logout")+"</h2></li>"
+
+    body += '</ul></nav><br><br><br><br><br>\n'
 
     #determine if the user is properly logged in once. 
     isLoggedIn = authenticate()
@@ -82,18 +89,18 @@ def main():
     if isLoggedIn:
         body += loggedIn()
     else:
-        body += notLoggedIn()
+        body += "hi"#notLoggedIn()
 
     #anyone can see this
-    body += "<hr>other stuff can go here<hr>\n"
+    #body += "<hr>other stuff can go here<hr>\n"
     
     #attach a logout link only if logged in
-    if isLoggedIn:
-        body+= makeLink("logout.py","Click here to log out")+"<br>"
+    #if isLoggedIn:
+    #    body+= makeLink("logout.py","Click here to log out")+"<br>"
 
     #make links that include logged in status when the user is logged in
-    body += makeLink("page1.py","here is page one")+'<br>'
-    body += makeLink("page2.py","here is page two")+'<br>'
+    #body += makeLink("page1.py","here is page one")+'<br>'
+    #body += makeLink("page2.py","here is page two")+'<br>'
 
     #finally print the entire page.
     print header() + body + footer()

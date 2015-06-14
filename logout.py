@@ -18,6 +18,8 @@ Attempting to log you out...<br>
 def footer():
     return """</body>
 </html>"""
+def makeLink(page, text, action):
+    return '<a href="'+page+securefields()+action+'">'+text+'</a>'
 
 #remove a user, only do this if they successfully authenticated
 #since this does not check to see if you have the right person
@@ -49,7 +51,7 @@ def processForm(form):
     return "You must be logged in properly to log out!<br>\n"
 
 def notLoggedIn():
-    return "You must be loggedin before trying to log out!<br>\n"
+    return "You must be loggedin before trying to log out!<br>\n<a href='index.html'>Return</a>"
 
 def main():
     form = cgi.FieldStorage()

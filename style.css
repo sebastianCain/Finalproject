@@ -1,7 +1,7 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
 
 html, body, table {
-    margin: 0 0;
+    /*margin: 0 0;*/
     padding: 0 0;
     font-family: 'Lato';
     text-align:center;
@@ -30,8 +30,13 @@ li {
 }
 
 h1 {
-    font-size: 100px;
+    font-size: 72px;
     margin: inherit;
+}
+
+img {
+    margin: 10px 10px;
+    display: inline-block;
 }
 
 a:link{
