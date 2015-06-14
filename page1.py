@@ -60,7 +60,7 @@ def securefields():
     return ""
 #makes a link, link will include secure features if the user is logged in
 def makeLink(page, text, action):
-    return '<a href="'+page+securefields()+action+'">'+text+'</a>'
+    return '<h2><a href="'+page+securefields()+action+'">'+text+'</a></h2>'
 
 deck = {}
 def createDeck():
@@ -117,6 +117,12 @@ def cardsToImgs(L):
         htmlStr += '<img src="images/'+(words[0])[0]+(words[2])[0]+'.png" width="72px" height="96px" alt="'+i+'">'
     return htmlStr
 
+def cardsToImgBacks(L):
+    htmlStr = ""
+    for i in range(len(L)):
+        htmlStr += '<img src="images/blue_back.png" width="72px" height="96px" alt="'+str(i)+'">'
+    return htmlStr
+
 def game():
     htmlStr = ""
     file=open("loggedin.txt",'r')
@@ -127,6 +133,7 @@ def game():
     userCards = []
     cpuCards = []
     gameOver = False
+    cpuActions = []
     for i in data:
         x = i.split(";")
         userInfo = x[0].split(",")
@@ -135,14 +142,21 @@ def game():
                 userCards = x[1].split(",")
                 cpuCards = x[2].split(",")
                 if form['action'].value == "stand":
+                    if sumOfCards(cpuCards) < 17:
+                        cpuCards.append(random.choice(deck.keys()))
+                        cpuActions.append("hits")
+                        while sumOfCards(cpuCards) < 17:
+                            cpuCards.append(random.choice(deck.keys()))
+                            cpuActions.append("hits")
+                        cpuActions.append("stands")
                     if sumOfCards(cpuCards) > 21:
-                        alert = "The AI has " + str(sumOfCards(userCards)) + " more than 21, so you win!"
+                        alert = "The CPU has " + str(sumOfCards(userCards)) + " more than 21, so you win!"
                         gameOver = True
                     elif sumOfCards(userCards) > sumOfCards(cpuCards):
-                        alert = "You are closer to 21 than the AI, so you win!"
+                        alert = "You are closer to 21 than the CPU, so you win!"
                         gameOver = True
                     else:
-                        alert = "The AI is closer to 21 than you, so you lose :("
+                        alert = "The CPU is closer to 21 than you, so you lose :("
                         gameOver = True
                 elif form['action'].value == "hit":
                     userCards.append(random.choice(deck.keys()))
@@ -151,6 +165,9 @@ def game():
                         gameOver = True
                     elif sumOfCards(cpuCards) < 17:
                         cpuCards.append(random.choice(deck.keys()))
+                        cpuActions.append("hits")
+                    else:
+                        cpuActions.append("stands")
                     if sumOfCards(cpuCards) > 21:
                         alert = "The AI has " + str(sumOfCards(userCards)) + ", more than 21, so you win!"
                         gameOver = True
@@ -166,18 +183,28 @@ def game():
             cpuString = ",".join(cpuCards)
             newLineArr = [x[0], userString, cpuString]
             line = ";".join(newLineArr)
-            htmlStr += "CPU cards:<br>" + cardsToImgs(cpuCards) + "<br><h2>The CPU has " + str(sumOfCards(cpuCards)) + " in total</h2><br>"
-            htmlStr += "Your cards:<br>" + cardsToImgs(userCards) + "<br><h2>You have " + str(sumOfCards(userCards)) + " in total</h2><br>"
             newData += line + "\n"
         else:
             newData += i + "\n"
     newfile = open("loggedin.txt", "w")
     newfile.write(newData)
     newfile.close()
+    
+    cpuActionStr = "The CPU " + ", then ".join(cpuActions) + "."
     if gameOver:
-        htmlStr += "<br><br>" + makeLink("page1.py","Restart", "&action=restart")
+        htmlStr += "Your cards:<br>" + cardsToImgs(userCards) + "<br><h2>You have " + str(sumOfCards(userCards)) + " in total</h2><br>"
+        if len(cpuActions) != 0:
+            htmlStr += cpuActionStr + "<br><br>"
+        htmlStr += "CPU cards:<br>" + cardsToImgs(cpuCards) + "<br><h2>The CPU has " + str(sumOfCards(cpuCards)) + " in total</h2><br>"
+        htmlStr += makeLink("page1.py","Restart", "&action=restart")
     else:
-        htmlStr += "<br><br>" + makeLink("page1.py","Hit","&action=hit") + "<br>" + makeLink("page1.py","Stand", "&action=stand")
+        htmlStr += "Your cards:<br>" + cardsToImgs(userCards) + "<br><h2>You have " + str(sumOfCards(userCards)) + " in total</h2>"
+        htmlStr += makeLink("page1.py","Hit","&action=hit") + makeLink("page1.py","Stand", "&action=stand")
+        if len(cpuActions) != 0:
+            htmlStr += "<br><h2>The CPU " + cpuActions[len(cpuActions)-1] + ".</h2><br>"
+        else:
+            htmlStr += "<br><h2>The CPU ...</h2>"
+        htmlStr += "CPU cards:<br>" + cardsToImgBacks(cpuCards)
     htmlStr += "<br><br><h2>" + alert + "</h2><br><br>"
     return htmlStr
             
