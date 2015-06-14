@@ -117,10 +117,11 @@ def cardsToImgs(L):
         htmlStr += '<img src="images/'+(words[0])[0]+(words[2])[0]+'.png" width="72px" height="96px" alt="'+i+'">'
     return htmlStr
 
-def cardsToImgBacks(L):
-    htmlStr = ""
-    for i in range(len(L)):
-        htmlStr += '<img src="images/blue_back.png" width="72px" height="96px" alt="'+str(i)+'">'
+def cardsToImgsCpu(L):
+    htmlStr = '<img src="images/blue_back.png" width="72px" height="96px" alt="'+L[0]+'">'
+    for i in L[1:]:
+        words = i.split(" ")
+        htmlStr += '<img src="images/'+(words[0])[0]+(words[2])[0]+'.png" width="72px" height="96px" alt="'+i+'">'
     return htmlStr
 
 def game():
@@ -204,7 +205,7 @@ def game():
             htmlStr += "<br><h2>The CPU " + cpuActions[len(cpuActions)-1] + ".</h2><br>"
         else:
             htmlStr += "<br><h2>The CPU ...</h2>"
-        htmlStr += "CPU cards:<br>" + cardsToImgBacks(cpuCards)
+        htmlStr += "CPU cards:<br>" + cardsToImgsCpu(cpuCards)
     htmlStr += "<br><br><h2>" + alert + "</h2><br><br>"
     return htmlStr
             
