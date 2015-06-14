@@ -78,6 +78,7 @@ def main():
     body += "<li><h2>"+makeLink("create.html","Sign Up")+"</h2></li>"
     body += "<li><h2>"+makeLink("page1.py","Play")+"</h2></li>"
     body += "<li><h2>"+makeLink("page2.py","Leaders")+"</h2></li>"
+    body += "<li><h2>"+makeLink("page3.py","Statistics")+"</h2></li>"
     body += "<li><h2>"+makeLink("logout.py","Logout")+"</h2></li>"
 
     body += '</ul></nav><br><br><br><br><br>\n'
