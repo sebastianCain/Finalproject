@@ -69,6 +69,15 @@ def loggedIn():
 def notLoggedIn():
     return '''You need to login to see more. You can log in here: <a href="login.html">here</a>\n'''
 
+def getinfo():
+    leaders=open("users.txt",'r')
+    stuff=leaders.read().split('\n')
+    leaders.close()
+    datalist=[]
+    for iteminlist in stuff:
+            datalist.append(iteminlist.split(','))
+    datalist[:]=datalist[1:-1]
+    return str(datalist)
 
 def main():
     body = ""
@@ -83,6 +92,7 @@ def main():
 
 
     body += '</ul></nav><br><br><br><br><br>\n'
+    body += getinfo()
 
     #determine if the user is properly logged in once. 
     isLoggedIn = authenticate()

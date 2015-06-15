@@ -124,6 +124,56 @@ def cardsToImgsCpu(L):
         htmlStr += '<img src="images/'+(words[0])[0]+(words[2])[0]+'.png" width="72px" height="96px" alt="'+i+'">'
     return htmlStr
 
+
+def outfilewrite(useracct,outcome):
+    leaders=open('users.txt','r')
+    stuff=leaders.read().split('\n')
+    leaders.close()
+    datalist=[]
+    for iteminlist in stuff:
+        datalist.append(iteminlist.split(','))
+    ctr=0
+    rowtomodnum=0
+    while ctr < len(datalist):
+        if useracct in datalist[ctr]:#SPECIFIC TO USER ACCOUNT
+            rowtomodnum=ctr
+        ctr+=1
+    rowtomod=datalist[rowtomodnum]
+    if len(rowtomod)<4:
+        rowtomod.append('0')
+        rowtomod.append('0')
+    if outcome == 'win':#WHERE OUTCOME IS
+        newnum=int(rowtomod[2])+1
+        rowtomod[2]=str(newnum)
+    else:
+        newnum=int(rowtomod[3])+1
+        rowtomod[3]=str(newnum)        
+    datalist[rowtomodnum]=rowtomod
+    #for each element in the datalist,
+    #we need to make a string out of it by joining the elements with commas
+    counter= 0
+    string=''
+    counter2=0
+    while counter < len(datalist):
+        while counter2 < len(datalist[counter]):
+            if counter2 !=len(datalist[counter])-1:
+                string+=datalist[counter][counter2]+','
+                counter2+=1
+            else:
+                string+=datalist[counter][counter2]
+                counter2+=1
+        counter2=0
+        datalist[counter]=string
+        string=''
+        counter+=1
+    writeout=''
+    for element in datalist:
+        writeout+=element+'\n'
+    lastly=open("users.txt",'w')
+    lastly.write(writeout)
+    lastly.close()
+    
+    
 def game():
     htmlStr = ""
     file=open("loggedin.txt",'r')
@@ -135,6 +185,9 @@ def game():
     cpuCards = []
     gameOver = False
     cpuActions = []
+    #
+    useracct=form.getvalue('user')
+    #
     for i in data:
         x = i.split(";")
         userInfo = x[0].split(",")
@@ -153,17 +206,21 @@ def game():
                     if sumOfCards(cpuCards) > 21:
                         alert = "The CPU has " + str(sumOfCards(userCards)) + " more than 21, so you win!"
                         gameOver = True
+                        outfilewrite(useracct,'win')
                     elif sumOfCards(userCards) > sumOfCards(cpuCards):
                         alert = "You are closer to 21 than the CPU, so you win!"
                         gameOver = True
+                        outfilewrite(useracct,'win')
                     else:
                         alert = "The CPU is closer to 21 than you, so you lose :("
                         gameOver = True
+                        outfilewrite(useracct,'lose')
                 elif form['action'].value == "hit":
                     userCards.append(random.choice(deck.keys()))
                     if sumOfCards(userCards) > 21:
                         alert = "You have " + str(sumOfCards(userCards)) + ", which is over 21, so you lose."
                         gameOver = True
+                        outfilewrite(useracct,'lose')
                     elif sumOfCards(cpuCards) < 17:
                         cpuCards.append(random.choice(deck.keys()))
                         cpuActions.append("hits")
@@ -172,6 +229,7 @@ def game():
                     if sumOfCards(cpuCards) > 21:
                         alert = "The AI has " + str(sumOfCards(userCards)) + ", more than 21, so you win!"
                         gameOver = True
+                        outfilewrite(useracct,'win')
                 elif form['action'].value == "restart":
                     userCards = []
                     cpuCards = []

@@ -19,7 +19,7 @@ def header():
     <link rel="stylesheet" href="style.css" type="text/css"/>
     </head>
     <body>
-        <h1> Leaderboard </h1>
+        <h1> Statistics </h1>
     """
 
 def footer():
