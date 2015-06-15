@@ -133,8 +133,39 @@ def losses(useracct):
 
 useracct=form.getvalue('user')
 
+def topten():
+    leaders=open('users.txt','r')
+    stuff=leaders.read().split('\n')
+    leaders.close()
+    #rank by wins
+    newstuff=[]
+    for item in stuff:
+        newstuff+=[item.split(',')]
+    filtered=[]
+    for item in newstuff:
+        if len(item) >= 4:
+            filtered.append(item)
+    #filtered[num][2] gives the amount of wins
+    winlist=[]
+    for player in filtered:
+        winlist+=[int(player[2])]
+    winlist=sorted(winlist)[::-1]
+    if len(winlist) > 10:
+        winlist[:]=winlist[:10]
+    top10=[]
+    for value in winlist:
+        for player in filtered:
+            if int(player[2])==value:
+                top10+=[player[0]]
+    finalstr='<u><h2><b>Here are the top players:</b></h2></u>'
+    for player in top10:
+        finalstr+='<h3>'+player+'</h3>'
+    return finalstr
+                    
+    
+
 def loggedIn():
-    return "<h3>POINTS:"+points(useracct)+'</h3><h3>WINS:'+wins(useracct)+'</h3><h3>LOSSES:'+losses(useracct)+'</h3>'
+    return "<hr><h2><b><u>Personal Score:</u></b></h2><h3>POINTS:"+points(useracct)+'</h3><h3>WINS:'+wins(useracct)+'</h3><h3>LOSSES:'+losses(useracct)+'</h3></hr>'
 
 def notLoggedIn():
     return "Whoops, seems like you're not logged in yet. Login up at the top, or create an account if you don't have one yet!"
@@ -152,6 +183,7 @@ def main():
 
 
     body += '</ul></nav><br><br><br><br><br>\n'
+    body += str(topten())
 
     #determine if the user is properly logged in once. 
     isLoggedIn = authenticate()
@@ -163,15 +195,15 @@ def main():
         body += notLoggedIn()
 
     #anyone can see this
-    body += "<hr>other stuff can go here<hr>\n"
+    #body += "<hr>other stuff can go here<hr>\n"
     
     #attach a logout link only if logged in
-    if isLoggedIn:
-        body+= makeLink("logout.py","Click here to log out")+"<br>"
+    #if isLoggedIn:
+    #    body+= makeLink("logout.py","Click here to log out")+"<br>"
 
     #make links that include logged in status when the user is logged in
-    body += makeLink("page1.py","here is page one")+'<br>'
-    body += makeLink("page2.py","here is page two")+'<br>'
+    #body += makeLink("page1.py","here is page one")+'<br>'
+    #body += makeLink("page2.py","here is page two")+'<br>'
 
     #finally print the entire page.
     print header() + body + footer()
