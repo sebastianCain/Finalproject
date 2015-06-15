@@ -1,0 +1,52 @@
+content-type: text/html
+
+    <!DOCTYPE HTML>
+    <html>
+    <head>
+    <title>page of my website...</title>
+    <link rel="stylesheet" href="style.css" type="text/css"/>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1.1", {packages:["bar"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Card Number', 'Busted', 'Didn't Bust'],
+    ['2', 0, 0
+],['3', 0, 0
+],['4', 0, 0
+],['5', 0, 0
+],['6', 0, 0
+],['7', 0, 0
+],['8', 0, 0
+],['9', 0, 0
+],['10', 0, 0
+],['11', 0, 0
+],['12', 0, 0
+],['13', 0, 0
+],['14', 0, 0
+],['15', 0, 0
+],['16', 0, 0
+],['17', 0, 0
+],['18', 0, 0
+],['19', 0, 0
+],['20', 0, 0
+],['21', 2, 4
+],]);
+        var options = {
+          chart: {
+            title: 'Hits',
+            subtitle: 'Bust or not From Certain Positions',
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+        chart.draw(data, options);
+      }
+    </script>
+    </head>
+    <body>
+        <h1> Statistics </h1>
+    <nav><ul><li><h2><a href="login.html">Login</a></h2></li><li><h2><a href="create.html">Sign Up</a></h2></li><li><h2><a href="page1.py">Play</a></h2></li><li><h2><a href="page2.py">Leaders</a></h2></li><li><h2><a href="page3.py">Statistics</a></h2></li><li><h2><a href="logout.py">Logout</a></h2></li></ul></nav><br><br><br><br><br>
+hi<div id="columnchart_material" style="width: 900px; height: 500px;"></div></body></html>

@@ -1,8 +1,104 @@
 newacct,2123246,104.236.16.55;3 of Spades,9 of Diamonds,8 of Diamonds;Jack of Spades,9 of Clubs,7 of Diamonds
 a,7657583,71.125.220.11;5 of Spades,8 of Hearts,7 of Spades;7 of Hearts,Queen of Diamonds
-tester,3020564,108.27.64.72;Jack of Diamonds,5 of Clubs;10 of Hearts,4 of Spades
-jencain,1655169,108.27.64.72;Jack of Spades,2 of Spades;Ace of Clubs,5 of Spades
+jencain,1655169,108.27.64.72;3 of Hearts,4 of Hearts;9 of Clubs,6 of Clubs
 dora,3719144,104.236.16.55;2 of Hearts,8 of Spades,10 of Diamonds;Queen of Spades,7 of Spades
+tester,4203916,108.27.64.72;8 of Clubs,Jack of Hearts;7 of Diamonds,Ace of Clubs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

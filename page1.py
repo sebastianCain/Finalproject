@@ -21,6 +21,7 @@ def header():
     </head>
     <body>
         <h1> Play Blackjack! </h1>
+        <h2>(if you don't know how to play, learn <a>here</a></h2>
     """
 
 
@@ -104,6 +105,12 @@ def sumOfCards(L):
         total += deck[i]
     return total	
 
+def sumOfCardsWoLast(L):
+    total = 0
+    for i in L[:-1]:
+        total += deck[i]
+    return total
+
 def dealCards(x,y):
     x.append(random.choice(deck.keys()))
     x.append(random.choice(deck.keys()))
@@ -172,7 +179,23 @@ def outfilewrite(useracct,outcome):
     lastly=open("users.txt",'w')
     lastly.write(writeout)
     lastly.close()
-    
+
+def updateStats(num):
+    statFile = open('stats.txt', 'r')
+    stats = statFile.readlines()
+    statFile.close()
+    finalStats = []
+    for i in stats:
+        newLine = ""
+        items = i.split(",")
+        if int(items[0]) == num:    
+            newLine = items[0] + "," + str(int(items[1])+1) + "\n"
+        else:
+            newLine = i
+        finalStats.append(newLine)
+    newStatFile = open('stats.txt', 'w')
+    newStatFile.write("".join(finalStats))
+    newStatFile.close()
     
 def game():
     htmlStr = ""
@@ -221,11 +244,14 @@ def game():
                         alert = "You have " + str(sumOfCards(userCards)) + ", which is over 21, so you lose."
                         gameOver = True
                         outfilewrite(useracct,'lose')
+                        updateStats(sumOfCardsWoLast(userCards))
                     elif sumOfCards(cpuCards) < 17:
                         cpuCards.append(random.choice(deck.keys()))
                         cpuActions.append("hits")
+                        #updateStats(sumOfCards(userCards))
                     else:
                         cpuActions.append("stands")
+                        #updateStats(sumOfCards(userCards))
                     if sumOfCards(cpuCards) > 21:
                         alert = "The AI has " + str(sumOfCards(userCards)) + ", more than 21, so you win!"
                         gameOver = True

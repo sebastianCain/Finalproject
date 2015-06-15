@@ -10,17 +10,47 @@ form = cgi.FieldStorage()
 
 #here is the edit
 def header():
-        return """content-type: text/html
+    html =  """content-type: text/html
 
     <!DOCTYPE HTML>
     <html>
     <head>
     <title>page of my website...</title>
     <link rel="stylesheet" href="style.css" type="text/css"/>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1.1", {packages:["bar"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Card Number', 'Busted'],
+    """
+    statFile = open('stats.txt', 'r')
+    stats = statFile.read().strip().split("\n")
+    statFile.close()
+    for i in stats:
+        items = i.split(",")
+        html += "['"+items[0]+"', "+items[1]+"],"
+    
+    html += """]);
+
+        var options = {
+          chart: {
+            title: '',
+            subtitle: '',
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+        chart.draw(data, options);
+      }
+    </script>
     </head>
     <body>
         <h1> Statistics </h1>
     """
+    return html
 
 def footer():
     return """</body>
@@ -59,7 +89,7 @@ def makeLink(page, text):
     return '<a href="'+page+securefields()+'">'+text+'</a>'
 
 def loggedIn():
-    return 'espanyolo'
+    return '<div id="columnchart_material" style="width: 95%; height: 500px;"></div>'
 
 def notLoggedIn():
     return '''You need to login to see more. You can log in here: <a href="login.html">here</a>\n'''
@@ -86,18 +116,7 @@ def main():
         body += loggedIn()
     else:
         body += notLoggedIn()
-
-    #anyone can see this
-    body += "<hr>other stuff can go here<hr>\n"
     
-    #attach a logout link only if logged in
-    if isLoggedIn:
-        body+= makeLink("logout.py","Click here to log out")+"<br>"
-
-    #make links that include logged in status when the user is logged in
-    body += makeLink("page1.py","here is page one")+'<br>'
-    body += makeLink("page2.py","here is page two")+'<br>'
-
     #finally print the entire page.
     print header() + body + footer()
 
