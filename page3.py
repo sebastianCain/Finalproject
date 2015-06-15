@@ -38,7 +38,8 @@ def authenticate():
         #compare with file
         text = open('loggedin.txt').read().split("\n")
         for line in text:
-            line = line.split(",")
+            userInfo = line.split(";")
+            line = userInfo[0].split(",")
             if line[0]==user:#when you find the right user name
                 if line[1]==magicnumber and line[2]==IP:
                     return True
@@ -46,9 +47,6 @@ def authenticate():
                     return False
         return False#in case user not found
     return False #no/missing fields passed into field storage
-
-
-#either returns ?user=__&magicnumber=__  or an empty string.
 def securefields():
     if 'user' in form and 'magicnumber' in form:
         user = form.getvalue('user')
@@ -61,10 +59,7 @@ def makeLink(page, text):
     return '<a href="'+page+securefields()+'">'+text+'</a>'
 
 def loggedIn():
-    return '''
-\tThis part is super secret!<br>
-\tMy secret? I hate peas.<br>
-'''
+    return 'espanyolo'
 
 def notLoggedIn():
     return '''You need to login to see more. You can log in here: <a href="login.html">here</a>\n'''
@@ -90,18 +85,18 @@ def main():
     if isLoggedIn:
         body += loggedIn()
     else:
-        body += "hi"#notLoggedIn()
+        body += notLoggedIn()
 
     #anyone can see this
-    #body += "<hr>other stuff can go here<hr>\n"
+    body += "<hr>other stuff can go here<hr>\n"
     
     #attach a logout link only if logged in
-    #if isLoggedIn:
-    #    body+= makeLink("logout.py","Click here to log out")+"<br>"
+    if isLoggedIn:
+        body+= makeLink("logout.py","Click here to log out")+"<br>"
 
     #make links that include logged in status when the user is logged in
-    #body += makeLink("page1.py","here is page one")+'<br>'
-    #body += makeLink("page2.py","here is page two")+'<br>'
+    body += makeLink("page1.py","here is page one")+'<br>'
+    body += makeLink("page2.py","here is page two")+'<br>'
 
     #finally print the entire page.
     print header() + body + footer()

@@ -38,7 +38,8 @@ def authenticate():
         #compare with file
         text = open('loggedin.txt').read().split("\n")
         for line in text:
-            line = line.split(",")
+            userInfo = line.split(";")
+            line = userInfo[0].split(",")
             if line[0]==user:#when you find the right user name
                 if line[1]==magicnumber and line[2]==IP:
                     return True
@@ -49,6 +50,8 @@ def authenticate():
 
 
 #either returns ?user=__&magicnumber=__  or an empty string.
+
+
 def securefields():
     if 'user' in form and 'magicnumber' in form:
         user = form.getvalue('user')
@@ -60,14 +63,6 @@ def securefields():
 def makeLink(page, text):
     return '<a href="'+page+securefields()+'">'+text+'</a>'
 
-def loggedIn():
-    return '''
-\tThis part is super secret!<br>
-\tMy secret? I hate peas.<br>
-'''
-
-def notLoggedIn():
-    return '''You need to login to see more. You can log in here: <a href="login.html">here</a>\n'''
 
 def getinfo():
     leaders=open("users.txt",'r')
@@ -77,8 +72,73 @@ def getinfo():
     for iteminlist in stuff:
             datalist.append(iteminlist.split(','))
     datalist[:]=datalist[1:-1]
-    return str(datalist)
+    return datalist
 
+def points(useracct):
+    leaders=open('users.txt','r')
+    stuff=leaders.read().split('\n')
+    leaders.close()
+    datalist=[]
+    for iteminlist in stuff:
+        datalist.append(iteminlist.split(','))
+    ctr=0
+    rowtomodnum=0
+    while ctr < len(datalist):
+        if useracct in datalist[ctr]:#SPECIFIC TO USER ACCOUNT
+            rowtomodnum=ctr
+        ctr+=1
+    rowtomod=datalist[rowtomodnum]
+    if len(rowtomod)<4:
+        return "0"
+    else:
+        return str(int(rowtomod[2])*10+int(rowtomod[3])*3)
+
+def wins(useracct):
+    leaders=open('users.txt','r')
+    stuff=leaders.read().split('\n')
+    leaders.close()
+    datalist=[]
+    for iteminlist in stuff:
+        datalist.append(iteminlist.split(','))
+    ctr=0
+    rowtomodnum=0
+    while ctr < len(datalist):
+        if useracct in datalist[ctr]:#SPECIFIC TO USER ACCOUNT
+            rowtomodnum=ctr
+        ctr+=1
+    rowtomod=datalist[rowtomodnum]
+    if len(rowtomod)<4:
+        return "0"
+    else:
+        return rowtomod[2]
+def losses(useracct):
+    leaders=open('users.txt','r')
+    stuff=leaders.read().split('\n')
+    leaders.close()
+    datalist=[]
+    for iteminlist in stuff:
+        datalist.append(iteminlist.split(','))
+    ctr=0
+    rowtomodnum=0
+    while ctr < len(datalist):
+        if useracct in datalist[ctr]:#SPECIFIC TO USER ACCOUNT
+            rowtomodnum=ctr
+        ctr+=1
+    rowtomod=datalist[rowtomodnum]
+    if len(rowtomod)<4:
+        return "0"
+    else:
+        return rowtomod[3]
+    
+
+useracct=form.getvalue('user')
+
+def loggedIn():
+    return "<h3>POINTS:"+points(useracct)+'</h3><h3>WINS:'+wins(useracct)+'</h3><h3>LOSSES:'+losses(useracct)+'</h3>'
+
+def notLoggedIn():
+    return "Whoops, seems like you're not logged in yet. Login up at the top, or create an account if you don't have one yet!"
+    
 def main():
     body = ""
     #use this to add stuff to the page that anyone can see.
@@ -92,27 +152,26 @@ def main():
 
 
     body += '</ul></nav><br><br><br><br><br>\n'
-    body += getinfo()
 
     #determine if the user is properly logged in once. 
     isLoggedIn = authenticate()
-
+    
     #use this to determine if you want to show "logged in " stuff, or regular stuff
     if isLoggedIn:
         body += loggedIn()
     else:
-        body += "hi"#notLoggedIn()
+        body += notLoggedIn()
 
     #anyone can see this
-    #body += "<hr>other stuff can go here<hr>\n"
+    body += "<hr>other stuff can go here<hr>\n"
     
     #attach a logout link only if logged in
-    #if isLoggedIn:
-    #    body+= makeLink("logout.py","Click here to log out")+"<br>"
+    if isLoggedIn:
+        body+= makeLink("logout.py","Click here to log out")+"<br>"
 
     #make links that include logged in status when the user is logged in
-    #body += makeLink("page1.py","here is page one")+'<br>'
-    #body += makeLink("page2.py","here is page two")+'<br>'
+    body += makeLink("page1.py","here is page one")+'<br>'
+    body += makeLink("page2.py","here is page two")+'<br>'
 
     #finally print the entire page.
     print header() + body + footer()
